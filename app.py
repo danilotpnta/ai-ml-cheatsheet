@@ -98,15 +98,47 @@ Guidelines for contributing to the project.
 ##########################
 
 def cs_body():
+    # Custom CSS to improve responsiveness
+    # Custom CSS to improve responsiveness
+    st.markdown(
+        """
+        <style>
+        /* Default three columns layout */
+        [data-testid="column"] {
+            width: calc(33.3333% - 1rem) !important;
+            flex: 1 1 calc(33.3333% - 1rem) !important;
+            min-width: calc(33.3333% - 1rem) !important;
+        }
 
+        /* Two columns on medium screens */
+        @media (max-width: 1200px) {
+            [data-testid="column"] {
+                width: calc(50% - 1rem) !important;
+                flex: 1 1 calc(50% - 1rem) !important;
+                min-width: calc(50% - 1rem) !important;
+            }
+        }
+
+        /* Stack columns on small screens */
+        @media (max-width: 900px) {
+            [data-testid="column"] {
+                width: calc(100% - 1rem) !important;
+                flex: 1 1 calc(100% - 1rem) !important;
+                min-width: calc(100% - 1rem) !important;
+            }
+        }
+        </style>
+        """, 
+        unsafe_allow_html=True,
+    )
+   
+    # Define columns as usual
     col1, col2, col3 = st.columns(3)
 
     #######################################
     # COLUMN 1
     #######################################
     
-    # Display text
-
     col1.subheader('Preprocessing & Data Handling')
     col1.code('''
 import numpy as np
@@ -124,8 +156,6 @@ train_data, test_data = train_test_split(data, test_size=0.2, random_state=42)
 # Handle missing data
 df.fillna(df.mean(), inplace=True)
     ''')
-
-    # Model setup
 
     col1.subheader('Model Setup')
     col1.code('''
@@ -152,10 +182,12 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
     ''')
 
-    # Training loop
-
-    col1.subheader('Training Loop')
-    col1.code('''
+    #######################################
+    # COLUMN 2
+    #######################################
+    
+    col2.subheader('Training Loop')
+    col2.code('''
 for epoch in range(num_epochs):
     for inputs, labels in dataloader:
         optimizer.zero_grad()  # Reset gradients
@@ -167,10 +199,8 @@ for epoch in range(num_epochs):
     print(f'Epoch {epoch+1}/{num_epochs}, Loss: {loss.item()}')
     ''')
 
-    # Evaluation
-
-    col1.subheader('Model Evaluation')
-    col1.code('''
+    col2.subheader('Model Evaluation')
+    col2.code('''
 # Evaluate the model
 model.eval()
 correct = 0
@@ -188,13 +218,11 @@ print(f'Accuracy: {accuracy}%')
     ''')
 
     #######################################
-    # COLUMN 2
+    # COLUMN 3
     #######################################
 
-    # Data augmentation
-
-    col2.subheader('Data Augmentation')
-    col2.code('''
+    col3.subheader('Data Augmentation')
+    col3.code('''
 from torchvision import transforms
 
 # Define transformations
@@ -208,10 +236,8 @@ transform = transforms.Compose([
 trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
     ''')
 
-    # Checkpoints
-
-    col2.subheader('Model Checkpoints')
-    col2.code('''
+    col3.subheader('Model Checkpoints')
+    col3.code('''
 # Save checkpoint
 torch.save({
     'epoch': epoch,
@@ -226,125 +252,8 @@ model.load_state_dict(checkpoint['model_state_dict'])
 optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
     ''')
 
-    # Hyperparameter tuning
-
-    col2.subheader('Hyperparameter Tuning')
-    col2.code('''
-from sklearn.model_selection import GridSearchCV
-
-# Define parameter grid
-param_grid = {
-    'batch_size': [16, 32, 64],
-    'lr': [0.001, 0.01, 0.1],
-    'dropout_rate': [0.3, 0.5, 0.7],
-}
-
-# Initialize and run grid search
-grid_search = GridSearchCV(estimator=model, param_grid=param_grid, scoring='accuracy', cv=5)
-grid_search.fit(X_train, y_train)
-
-print(f'Best parameters: {grid_search.best_params_}')
-    ''')
-
-    # Experiment tracking
-
-    col2.subheader('Experiment Tracking')
-    col2.code('''
-import wandb
-
-# Initialize WandB
-wandb.init(project="my-ai-project")
-
-# Log hyperparameters and metrics
-wandb.config.update({
-    "learning_rate": 0.001,
-    "epochs": 10,
-    "batch_size": 32
-})
-
-# During training
-for epoch in range(num_epochs):
-    wandb.log({"epoch": epoch, "loss": loss.item(), "accuracy": accuracy})
-
-wandb.finish()
-    ''')
-
-    #######################################
-    # COLUMN 3
-    #######################################
-
-    # Post-processing
-
-    col3.subheader('Post-processing')
-    col3.code('''
-import numpy as np
-from sklearn.metrics import confusion_matrix, classification_report
-
-# Get predictions
-y_pred = model.predict(X_test)
-
-# Confusion matrix
-cm = confusion_matrix(y_test, y_pred)
-print(f'Confusion Matrix: \n{cm}')
-
-# Classification report
-cr = classification_report(y_test, y_pred)
-print(f'Classification Report: \n{cr}')
-    ''')
-
-    # Inference
-
-    col3.subheader('Inference')
-    col3.code('''
-# Switch model to evaluation mode
-model.eval()
-
-# Make predictions on new data
-with torch.no_grad():
-    predictions = model(new_data)
-
-# Apply softmax to get probabilities
-probabilities = torch.softmax(predictions, dim=1)
-predicted_labels = torch.argmax(probabilities, dim=1)
-print(f'Predicted labels: {predicted_labels}')
-    ''')
-
-    # Deployment
-
-    col3.subheader('Model Deployment')
-    col3.code('''
-import joblib
-
-# Save the model
-joblib.dump(model, 'model.pkl')
-
-# Load the model
-loaded_model = joblib.load('model.pkl')
-
-# Predict using the loaded model
-predictions = loaded_model.predict(X_new)
-print(f'Predictions: {predictions}')
-    ''')
-
-    # Common Mistakes and Tips
-
-    col3.subheader('Common Mistakes & Tips')
-    col3.code('''
-# Don’t forget to zero gradients
-optimizer.zero_grad()
-
-# Always normalize your data
-normalized_data = (data - mean) / std
-
-# Use batches to handle large datasets
-for batch in dataloader:
-    ...
-
-# Track your experiments for better reproducibility
-wandb.init(project="my-ai-project")
-    ''')
-
     return None
+
 
 # Run main()
 
