@@ -1,2 +1,2 @@
 # ai-ml-cheatsheet
-A cheat sheet for AI/ML development, featuring essential commands, best practices, and code snippets for setting up environments, training models, and deploying AI/ML applications
+A cheat sheet for AI/ML development. This repository serves as a quick reference guide for setting up environments, training models, and deploying AI models
