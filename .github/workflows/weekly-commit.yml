@@ -12,15 +12,23 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Fetch all history so pull works correctly
 
       - name: Set up Git configuration
         run: |
           git config --local user.name "GitHub Actions Bot"
           git config --local user.email "actions@github.com"
 
+      - name: Pull latest changes
+        run: git pull origin main  # Pulls latest changes from the 'main' branch
+
       - name: Create an empty commit
         run: |
           git commit --allow-empty -m "Empty commit every minute"
-          git push origin main  # Replace 'main' with your branch if it's different
+
+      - name: Push changes
+        run: |
+          git push origin main  # Replace 'main' with your branch if different
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Authentication token to push commits
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Uses built-in GitHub token
