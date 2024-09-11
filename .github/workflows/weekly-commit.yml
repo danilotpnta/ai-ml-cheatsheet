@@ -3,7 +3,7 @@ name: Minute Empty Commit Bot
 on:
   schedule:
     - cron: '* * * * *'  # Runs every minute
-  workflow_dispatch: # Allows manual triggering if needed
+  workflow_dispatch:  # Allows manual triggering if needed
 
 jobs:
   commit:
@@ -13,9 +13,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Set up Git configuration
+        run: |
+          git config --local user.name "GitHub Actions Bot"
+          git config --local user.email "actions@github.com"
+
       - name: Create an empty commit
         run: |
           git commit --allow-empty -m "Empty commit every minute"
-          git push origin main  # Replace 'main' with your branch name if different
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git push origin main  # Replace 'main' with your branch if it's different
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Authentication token to push commits
