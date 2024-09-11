@@ -2,8 +2,8 @@ name: Minute Empty Commit Bot
 
 on:
   schedule:
-    - cron: '* * * * *'  # Runs every minute
-  workflow_dispatch:  # Allows manual triggering if needed
+    - cron: '*/5 * * * *'  # Runs every minute
+  # workflow_dispatch:  # Allows manual triggering if needed
 
 jobs:
   commit:
