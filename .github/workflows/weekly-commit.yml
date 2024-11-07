@@ -1,9 +1,9 @@
 name: Six-Day Empty Commit Bot
 
-on:
-  schedule:
-    - cron: '0 0 */6 * *'  # Runs every 6 days at midnight
-  # workflow_dispatch:  # Allows manual triggering if needed
+# on:
+#   schedule:
+#     - cron: '0 0 */6 * *'  # Runs every 6 days at midnight
+#   # workflow_dispatch:  # Allows manual triggering if needed
 
 jobs:
   commit:
